@@ -1,4 +1,4 @@
-# Gráficos de estadistica descriptivas
+# Gráficos de estadística descriptiva
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -12,7 +12,7 @@ from matplotlib import colors
 data = pd.DataFrame({'España': [826, 943, 942, 901],
                      'México': [668, 781, 791, 813],
                      'Colombia': [488, 553, 563, 537]},
-                    index=('Lunes', 'Martes', 'Miércoles', 'Jueves'))  # Creación de la base de datos
+                    index=('Lunes', 'Martes', 'Miércoles', 'Jueves',))  # Creación de la base de datos
 
 # %%Diagrama de barras verticales para indicar el número de visitas totales por días de la semana
 total = data.sum(axis=1)  # Suma de las filas para estimas las visitas totales por día de la semana
