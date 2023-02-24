@@ -4,10 +4,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-from matplotlib import cm
+from matplotlib import colormaps
 from matplotlib import colors
-# %%Gráfico de barras
 
+# %%Gráfico de barras
 
 data = pd.DataFrame({'España': [826, 943, 942, 901],
                      'México': [668, 781, 791, 813],
@@ -52,9 +52,9 @@ cierta cantidad de manzanas
 manzanas = [20, 10, 25, 30]
 nombres = ['Ana', 'Juan', 'Diana', 'Catalina']
 
-normdata = colors.Normalize(min(manzanas), max(manzanas))
-colormap = cm.get_cmap("Blues")
-colores = colormap(normdata(manzanas))
+nordata = colors.Normalize(min(manzanas), max(manzanas))
+colormap = colormaps["Blues"]
+colores = colormap(nordata(manzanas))
 desfase = (0, 0, 0, 0.2)
 
 plt.pie(manzanas, labels=nombres, autopct="%0.1f%%", colors=colores, explode=desfase)
