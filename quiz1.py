@@ -4,10 +4,9 @@ import statistics as st
 
 # %%Tabla de frecuencia para histograma
 
-data_base = pd.read_excel("C:/Users/david/Documents/quiz1.xlsx", sheet_name="Hoja1")
+data_base = pd.read_excel("C:/Users/david/Estadistica.xlsx", sheet_name="Hoja1")
 
 data_base = data_base["Datos"]
-
 
 def tabla_de_frecuencia(data_base):
     n = len(data_base)
@@ -15,6 +14,7 @@ def tabla_de_frecuencia(data_base):
     print(l)
     min_val = min(data_base)
     max_val = max(data_base)
+    print(min_val, max_val)
     t_clase = (max_val - min_val) / l
     print(t_clase)
     tabla_frecuencia = pd.DataFrame()
@@ -34,7 +34,7 @@ def tabla_de_frecuencia(data_base):
             if inf <= element < sup + 0.0001:
                 count += 1
         frecuencias.append(count)
-        frecuenciar = count / n
+        frecuenciar = (count / n) * 100
         frecuenciarv.append(frecuenciar)
         infv.append(inf)
         supv.append(sup)
@@ -53,8 +53,8 @@ def tabla_de_frecuencia(data_base):
 
     return tabla_frecuencia, hist
 
-
 tabla = tabla_de_frecuencia(data_base=data_base)[0]
+print(tabla)
 hist = tabla_de_frecuencia(data_base=data_base)[1]
 plt.show()
 
@@ -63,7 +63,7 @@ plt.show()
 caja_bigotes = plt.boxplot(data_base, vert=False)
 plt.show()
 
-xbarra = st.mean(data_base) # media
+xbarra = st.mean(data_base)  # media
 mediana = st.median(data_base)
 
 desv_est = st.stdev(data_base)
