@@ -2,29 +2,6 @@ import pandas as pd
 from itertools import combinations
 
 
-def main():
-    """
-    Creación de los datos años de los empleados para poder hallar una tabla de muestreo
-    Entre una combinación de 2 empleados y también encontrar la distribución de probabilidad
-    y la distribución de probabilidad de la varianza.
-    :return: void
-    """
-    data = pd.DataFrame({'E1': [2],
-                         'E2': [4],
-                         'E3': [6],
-                         'E4': [6],
-                         'E5': [7],
-                         'E6': [8]})  # Ingreso de los años de los empleados
-
-    tb_m = tabla_muestreo(data)
-    dis_prob = distri_prob(tb_m)
-    dis_prob_var = distri_prob_var(tb_m)
-
-    print("Tabla de muestreo:\n", tb_m)
-    print("\nDistribución de probabilidad:\n", dis_prob)
-    print("\nDistribución de probabilidad varianza:\n", dis_prob_var)
-
-
 # %%Tabla de muestreo
 def tabla_muestreo(data):
     """
@@ -74,7 +51,7 @@ def distri_prob(tb_mb):
                                       'Frecuencia',
                                       'F.R',
                                       'Porcentaje']))  # Se agregan los datos a la lista
-    df_dis_prob = pd.DataFrame(dates, index=range(1, len(lista) + 1))   # Se adicionan los datos a un DataFrame
+    df_dis_prob = pd.DataFrame(dates, index=range(1, len(lista) + 1))  # Se adicionan los datos a un DataFrame
     return df_dis_prob
 
 
@@ -88,7 +65,7 @@ def distri_prob_var(tb_mb):
     """
     tb_mb = tb_mb.sort_values('Varianza_Muestral')  # Se organizan los datos ascendentes para la varianza muestral
     dates = []
-    lista = tb_mb.Varianza_Muestral.drop_duplicates()   # Elimina datos duplicados
+    lista = tb_mb.Varianza_Muestral.drop_duplicates()  # Elimina datos duplicados
     for item in lista:
         varianza = item
         frecuencia = int(list(tb_mb.Varianza_Muestral).count(item))
@@ -102,9 +79,22 @@ def distri_prob_var(tb_mb):
                                       'Frecuencia',
                                       'F.R',
                                       'Porcentaje']))  # Se agregan los datos a la lista
-    df_dis_prob_var = pd.DataFrame(dates, index=range(1, len(lista) + 1))   # Se adicionan los datos a un DataFrame
+    df_dis_prob_var = pd.DataFrame(dates, index=range(1, len(lista) + 1))  # Se adicionan los datos a un DataFrame
     return df_dis_prob_var
 
 
-if __name__ == '__main__':
-    main()
+# %% Ingreso de información
+# Creación de los datos años de los empleados para poder hallar una tabla de muestreo
+# Entre una combinación de 2 empleados y también encontrar la distribución de probabilidad
+# y la distribución de probabilidad de la varianza.
+
+data = pd.DataFrame({'E1': [2],
+                     'E2': [4],
+                     'E3': [6],
+                     'E4': [6],
+                     'E5': [7],
+                     'E6': [8]})  # Ingreso de los años de los empleados
+
+tb_m = tabla_muestreo(data)
+dis_prob = distri_prob(tb_m)
+dis_prob_var = distri_prob_var(tb_m)
