@@ -52,24 +52,3 @@ class TamanoMuestra:
         z = norm.ppf(alpha_medios)
         n = (4*z**2*((self.get_p_gorro()/100)*(1-(self.get_p_gorro()/100))))/(self.get_w())**2
         print("El tamaño de la muestra debe ser aproximadamente", n)
-
-
-#%% Inicio de pruebas
-# Ejercicio para tamaño de la muestra con la media
-"""Un intensivo monitoreo a un sistema operativo sugiere que el tiempo de respuesta a un comando
-de edición particular está normalmente distribuido con σ = 25 ms.
-
-Se instaló un nuevo sistema operativo y se desea estimar el tiempo de respuesta promedio
-verdadero µ en el nuevo entorno . Suponiendo que los tiempo de respuesta siguen estando
-normalmente distribuidos con σ = 25 ms.
-¿Que tamaño de muestra es necesario para asegurarse de que el intervalo de confianza del 95 %
-resultante tiene un ancho de cuando mucho 10 ms
-"""
-
-TamanoMuestra.tamano_media(25, 95, 10).calcular_tamano_muestra_media()
-
-# Ejercicio para tamaño de la muestra con la proporción
-"""Del ejemplo anterior estime el tamaño de muestra para que el intervalo de confianza del
-98 tenga un ancho de 2"""
-
-TamanoMuestra.tamano_proporcion(85, 0.02, 98).calcular_tamano_muestra_proporcion()
