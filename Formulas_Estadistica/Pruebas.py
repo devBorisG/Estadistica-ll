@@ -113,3 +113,33 @@ TamanoMuestra.tamano_media(25, 95, 10).calcular_tamano_muestra_media()
 
 TamanoMuestra.tamano_proporcion(85, 0.02, 98).calcular_tamano_muestra_proporcion()
 
+from DistribucionMuestreo import DistriMuestre
+#%% Inicio de pruebas tablas distribución de muestreo
+"""En un salón hay 5 estudiantes, cada uno se encuentra cursando un semestre diferente como
+se muestra en los datos presentados a continuación
+E1 6
+E2 4
+E3 3
+E4 6
+E5 2
+
+De acuerdo con la información presentada responda las siguientes preguntas
+a) ¿Cuál es la media poblacional y la varianza poblacional de los semestres cursados?
+b) Si se selecciona una muestra n= 3 estudiantes, ¿De cuantas posibles formas puedo
+seleccionar la muestra?
+c) Estime la distribución de muestreo para la media y para la varianza
+d) ¿Cuál es la probabilidad de seleccionar una media muestral mayor a 4
+e) ¿Cuál es la probabilidad de seleccionar una varianza muestral menor a 2
+"""
+
+print("Ejercicio Distribución de Muestreo 1")
+data = pd.DataFrame({'E1': [6],
+                     'E2': [4],
+                     'E3': [3],
+                     'E4': [6],
+                     'E5': [2]})
+print(data)
+r = DistriMuestre.creacion_tablas(data, 3)
+print("Inciso a:\n\tMedia Poblacional=", r.get_x_barra(), "\n\tVarianza Poblacional=", r.get_var_poblacional())
+print("Inciso b:\n", r.get_tabla_muestreo())
+print("Inciso c:\n\tDistribución Muestreo media", r.get_dis_tabla_prob(), "\n\tVarianza", r.get_prob_var())

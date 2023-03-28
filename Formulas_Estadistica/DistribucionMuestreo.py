@@ -6,21 +6,28 @@ from numpy import var
 
 class DistriMuestre:
 
-    def __int__(self, datos, x_barra, var_poblacional, combinaciones):
+    def __int__(self, datos, x_barra, var_poblacional, combinaciones, tb_mues, tb_dis_prob, tb_prob_var):
         self.datos = datos
         self.x_barra = x_barra
         self.var_poblacional = var_poblacional
         self.combinaciones = combinaciones
+        self.tb_mues = tb_mues
+        self.tb_dis_prob = tb_dis_prob
+        self.tb_prob_var = tb_prob_var
 
     @classmethod
-    def ingresar_datos(cls, datos, combinaciones):
-        ingresar_datos = cls.__new__(cls)
-        ingresar_datos.datos = datos
-        ingresar_datos.x_barra = datos.mean(axis=1)
-        ingresar_datos.var_poblacional = datos.var(axis=1, ddof=0)
-        ingresar_datos.combinaciones = combinaciones
-        return ingresar_datos
+    def creacion_tablas(cls, datos, combinaciones):
+        creacion_tablas = cls.__new__(cls)
+        creacion_tablas.datos = datos
+        creacion_tablas.x_barra = datos.mean(axis=1)
+        creacion_tablas.var_poblacional = datos.var(axis=1, ddof=0) # axis=1 quiere decir la fila 1, ddof=0 (varianza poblacional), ddof=1 (varianza muestral, esta como predeterminado)
+        creacion_tablas.combinaciones = combinaciones
+        creacion_tablas.tb_mues = DistriMuestre.tabla_muestreo(creacion_tablas)
+        creacion_tablas.tb_dis_prob = DistriMuestre.tabla_distri_probabilidad(creacion_tablas)
+        creacion_tablas.tb_prob_var = DistriMuestre.tabla_distri_probabilidad_varianza(creacion_tablas)
+        return creacion_tablas
 
+    # Creación de getters
     def get_x_barra(self):
         return self.x_barra
 
@@ -33,6 +40,16 @@ class DistriMuestre:
     def get_combinaciones(self):
         return self.combinaciones
 
+    def get_tabla_muestreo(self):
+        return self.tb_mues
+
+    def get_dis_tabla_prob(self):
+        return self.tb_dis_prob
+
+    def get_prob_var(self):
+        return self.tb_prob_var
+
+    # Creación de comportamientos
     def tabla_muestreo(self):
         dates = []
         temp = combinations(self.get_datos(), self.get_combinaciones())
@@ -47,38 +64,48 @@ class DistriMuestre:
                                     media_muestral,
                                     varianza_muestral],
                                    index=['Datos',
-                                          'Valor Datos',
-                                          'Media Muestral',
-                                          'Varianza Muestral']))
+                                          'Valor_Datos',
+                                          'Media_Muestral',
+                                          'Varianza_Muestral']))
         df_muestreo = pd.DataFrame(dates, index=range(1, len(dates) + 1))
         return df_muestreo
 
+    def tabla_distri_probabilidad(self):
+        dates = []
+        lista = self.get_tabla_muestreo().Media_Muestral.drop_duplicates()
+        for item in lista:
+            media = item
+            frecuencia = int(list(self.get_tabla_muestreo().Media_Muestral).count(item))
+            fr = round(frecuencia / len(self.get_tabla_muestreo()), 4) # Cuatro decimales de precisión
+            percent =  str(round(fr * 100, 2)) + " %" # Conversión a porcentaje
+            dates.append(pd.Series([media,
+                                    frecuencia,
+                                    fr,
+                                    percent],
+                                   index=['Media',
+                                          'Frecuencia',
+                                          'F.R',
+                                          'Porcentaje']))
+        df_dis_prob = pd.DataFrame(dates, index=range(1, len(lista)+1))
+        return df_dis_prob
 
-"""En un salón hay 5 estudiantes, cada uno se encuentra cursando un semestre diferente como
-se muestra en los datos presentados a continuación
-E1 6
-E2 4
-E3 3
-E4 6
-E5 2
+    def tabla_distri_probabilidad_varianza(self):
+        tmb = self.get_tabla_muestreo().sort_values('Varianza_Muestral')
+        dates = []
+        lista = tmb.Varianza_Muestral.drop_duplicates()
+        for item in lista:
+            varianza = item
+            frecuencia = int(list(tmb.Varianza_Muestral).count(item))
+            fr = round(frecuencia / len(tmb), 4)
+            percent = str(round(fr * 100, 2)) + " %"
+            dates.append(pd.Series([varianza,
+                                    frecuencia,
+                                    fr,
+                                    percent],
+                                   index=['Varianza Muestral',
+                                          'Frecuencia',
+                                          'F.R',
+                                          'Porcentaje']))
+        df_dis_prob_var = pd.DataFrame(dates, index=range(1, len(lista)+1))
+        return df_dis_prob_var
 
-De acuerdo con la información presentada responda las siguientes preguntas
-a) ¿Cuál es la media poblacional y la varianza poblacional de los semestres cursados?
-b) Si se selecciona una muestra n= 3 estudiantes, ¿De cuantas posibles formas puedo
-seleccionar la muestra?
-c) Estime la distribución de muestreo para la media y para la varianza
-d) ¿Cuál es la probabilidad de seleccionar una media muestral mayor a 4
-e) ¿Cuál es la probabilidad de seleccionar una varianza muestral menor a 2
-"""
-
-print("Ejercicio Distribución de Muestreo 1")
-data = pd.DataFrame({'E1': [6],
-                     'E2': [4],
-                     'E3': [3],
-                     'E4': [6],
-                     'E5': [2]})
-print(data)
-r = DistriMuestre.ingresar_datos(data, 3)
-print("Inciso a:\n\tMedia Poblacional=", r.get_x_barra(), "\n\tVarianza Poblacional=", r.get_var_poblacional())
-print("Inciso b:\n", r.tabla_muestreo())
-print("Inciso c:")
