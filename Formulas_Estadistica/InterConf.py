@@ -5,7 +5,7 @@ from statistics import mean, stdev, pstdev
 from scipy.stats import norm, t, chi2
 
 # %% Creación de la clase para estadística inferencial
-class IntervalosConfianza:
+class InterConf:
 
     # %% Creación de todos los constructores necesarios
     def __int__(self, nivel_confianza, des_estand_poblacional, n, x_barra, des_estand_muestral, p_gorro):

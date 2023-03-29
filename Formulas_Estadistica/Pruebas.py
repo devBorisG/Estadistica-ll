@@ -1,4 +1,6 @@
-from IntervalosConfianza import IntervalosConfianza
+from InterConf import InterConf
+from TamaMuest import TamaMuest
+from DistribucionMuestreo import DistriMuestre
 import pandas as pd
 # %% Inicio de Pruebas Intervalos confianza
 # Prueba para caso uno sin datos de muestra
@@ -6,20 +8,20 @@ nivel = 95
 des_poblacional = 5
 muestra = 40
 media = 68
-respuesta = IntervalosConfianza.caso_uno_sin_datos(nivel, des_poblacional, muestra, media)
+respuesta = InterConf.caso_uno_sin_datos(nivel, des_poblacional, muestra, media)
 respuesta.intervalo_rango_caso_uno()
 
 # Prueba para caso dos con datos de muestra
 data_base = pd.read_excel("C:/Users/david/Documents/IntervalosDeConfianza.xlsx", sheet_name="Media Caso ll")
 data_base = data_base["Datos TRM"]
 print("Datos Ejercicio 2: \n", data_base)
-respuesta = IntervalosConfianza.caso_dos_tres_con_datos(92, data_base)
+respuesta = InterConf.caso_dos_tres_con_datos(92, data_base)
 respuesta.intervalo_rango_caso_dos()
 
 # Prueba para caso tres con datos de muestra
 dates = [16, 17, 10, 19, 21, 14, 22, 19, 8]
 print("Datos ejercicio 3: \n", dates)
-respuesta = IntervalosConfianza.caso_dos_tres_con_datos(90, dates)
+respuesta = InterConf.caso_dos_tres_con_datos(90, dates)
 respuesta.intervalo_rango_caso_tres()
 
 # Prueba para los intervalos de confianza con la proporción
@@ -29,7 +31,7 @@ productos el 85 pasan la prueba Estime un intervalo de confianza del 97 5 para l
 cantidad de artículos que verdaderamente pasan las pruebas de certificación"""
 
 print("Ejercicio 4: \n")
-IntervalosConfianza.intervalo_confianza_proporcion(6900, 85, 97.5).calcular_intervalo_proporcion()
+InterConf.intervalo_confianza_proporcion(6900, 85, 97.5).calcular_intervalo_proporcion()
 
 """Los datos adjuntos del precio de arrendamiento en un sector de Miami en USD, se
 muestran a continuación:
@@ -54,8 +56,8 @@ Estime un intervalo de confianza del 95 para σ 2
 """
 
 print("Ejercicio 5")
-IntervalosConfianza.intervalo_confianza_varianza_con_datos([1470, 2200, 1510, 2290, 1690, 2380, 1740, 2390, 1900, 2480,
-                                                            2000, 2500, 2030, 2580, 2100, 2700, 2190], 95) \
+InterConf.intervalo_confianza_varianza_con_datos([1470, 2200, 1510, 2290, 1690, 2380, 1740, 2390, 1900, 2480,
+                                                  2000, 2500, 2030, 2580, 2100, 2700, 2190], 95) \
     .calcular_intervalo_varianza()
 
 """Existen varios medicamentos para tratar la diabetes Un experto en ventas de una importante compañía
@@ -82,17 +84,17 @@ c) Encuentro un intervalo de confianza del 90 para la varianza
 print("Ejercicio aplicado 1: ")
 print("Inciso a:")
 prescripciones = [210, 265, 240, 310, 190, 284, 275, 263, 290, 243]
-IntervalosConfianza.caso_dos_tres_con_datos(90, prescripciones).intervalo_rango_caso_tres()
+InterConf.caso_dos_tres_con_datos(90, prescripciones).intervalo_rango_caso_tres()
 
 print("Inciso b:")
 print(" b1:")
-IntervalosConfianza.caso_dos_tres_con_datos(95, prescripciones).intervalo_rango_caso_tres()
+InterConf.caso_dos_tres_con_datos(95, prescripciones).intervalo_rango_caso_tres()
 print(" b2:")
-IntervalosConfianza.caso_dos_tres_con_datos(98, prescripciones).intervalo_rango_caso_tres()
+InterConf.caso_dos_tres_con_datos(98, prescripciones).intervalo_rango_caso_tres()
 print("Inciso c:")
-IntervalosConfianza.intervalo_confianza_varianza_con_datos(prescripciones, 90).calcular_intervalo_varianza()
+InterConf.intervalo_confianza_varianza_con_datos(prescripciones, 90).calcular_intervalo_varianza()
 
-from TamanoMuestra import TamanoMuestra
+
 #%% Inicio de pruebas Tamaño de la muestra
 # Ejercicio para tamaño de la muestra con la media
 """Un intensivo monitoreo a un sistema operativo sugiere que el tiempo de respuesta a un comando
@@ -105,15 +107,14 @@ normalmente distribuidos con σ = 25 ms.
 resultante tiene un ancho de cuando mucho 10 ms
 """
 
-TamanoMuestra.tamano_media(25, 95, 10).calcular_tamano_muestra_media()
+TamaMuest.tamano_media(25, 95, 10).calcular_tamano_muestra_media()
 
 # Ejercicio para tamaño de la muestra con la proporción
 """Del ejemplo anterior estime el tamaño de muestra para que el intervalo de confianza del
 98 tenga un ancho de 2"""
 
-TamanoMuestra.tamano_proporcion(85, 0.02, 98).calcular_tamano_muestra_proporcion()
+TamaMuest.tamano_proporcion(85, 0.02, 98).calcular_tamano_muestra_proporcion()
 
-from DistribucionMuestreo import DistriMuestre
 #%% Inicio de pruebas tablas distribución de muestreo
 """En un salón hay 5 estudiantes, cada uno se encuentra cursando un semestre diferente como
 se muestra en los datos presentados a continuación

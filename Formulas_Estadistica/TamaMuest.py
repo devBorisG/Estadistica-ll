@@ -1,7 +1,7 @@
 from scipy.stats import norm
 
 
-class TamanoMuestra:
+class TamaMuest:
 
     def __int__(self, des_estand_poblacional, nivel_confianza, w, p_gorro):
         self.des_estand_poblacional = des_estand_poblacional
