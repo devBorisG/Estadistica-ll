@@ -46,7 +46,7 @@ def comparar_entre_incluyendo_ambos(datos, valor_peque, valor_grande):
     return cont
 
 
-def comprar_entre_incluyendo_peque(datos, valor_peque, valor_grande):
+def comparar_entre_incluyendo_peque(datos, valor_peque, valor_grande):
     cont = 0
     for item in datos:
         if valor_peque <= item < valor_grande:
@@ -54,9 +54,17 @@ def comprar_entre_incluyendo_peque(datos, valor_peque, valor_grande):
     return cont
 
 
-def comprar_entre_incluyendo_grande(datos, valor_peque, valor_grande):
+def comparar_entre_incluyendo_grande(datos, valor_peque, valor_grande):
     cont = 0
     for item in datos:
         if valor_peque < item <= valor_grande:
             cont += 1
+    return cont
+
+
+def comparar_iguales(datos, valor):
+    cont = 0
+    for item in datos:
+        if item == valor:
+            cont +=1
     return cont

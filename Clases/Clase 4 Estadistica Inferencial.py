@@ -11,10 +11,10 @@ n = 30
 
 # Definición, creación y solución de la integral definida
 x = sp.Symbol('x')
-y1 = (3 / 125) * x ** 3
-y2 = (3 / 125) * x ** 4
-miu = sp.integrate(y1, (x, 0, 5))
-ex2 = sp.integrate(y2, (x, 0, 5))
+y1 = ((3/2)*(1-x**2)) * x
+y2 = ((3/2)*(1-x**2)) * x ** 2
+miu = sp.integrate(y1, (x, 0, 1))
+ex2 = sp.integrate(y2, (x, 0, 1 ))
 
 # Calculos para hallar probabilidad
 vx = ex2 - (miu ** 2)

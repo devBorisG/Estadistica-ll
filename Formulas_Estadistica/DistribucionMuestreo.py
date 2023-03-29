@@ -1,7 +1,8 @@
-from itertools import combinations
+from itertools import combinations, product
 
 import pandas as pd
 from numpy import var
+from Formulas_Estadistica.Comparacion import *
 
 
 class DistriMuestre:
@@ -16,13 +17,29 @@ class DistriMuestre:
         self.tb_prob_var = tb_prob_var
 
     @classmethod
-    def creacion_tablas(cls, datos, combinaciones):
+    def creacion_tablas_permutacion(cls, datos, combinaciones):
         creacion_tablas = cls.__new__(cls)
         creacion_tablas.datos = datos
-        creacion_tablas.x_barra = datos.mean(axis=1)
-        creacion_tablas.var_poblacional = datos.var(axis=1, ddof=0) # axis=1 quiere decir la fila 1, ddof=0 (varianza poblacional), ddof=1 (varianza muestral, esta como predeterminado)
+        creacion_tablas.x_barra = float(datos.mean(axis=1))
+        creacion_tablas.var_poblacional = float(datos.var(axis=1,
+                                                          ddof=0))  # axis=1 quiere decir la fila 1, ddof=0 (varianza
+        # poblacional), ddof=1 (varianza muestral, esta como predeterminado)
         creacion_tablas.combinaciones = combinaciones
-        creacion_tablas.tb_mues = DistriMuestre.tabla_muestreo(creacion_tablas)
+        creacion_tablas.tb_mues = DistriMuestre.tabla_muestreo_permutacion(creacion_tablas)
+        creacion_tablas.tb_dis_prob = DistriMuestre.tabla_distri_probabilidad(creacion_tablas)
+        creacion_tablas.tb_prob_var = DistriMuestre.tabla_distri_probabilidad_varianza(creacion_tablas)
+        return creacion_tablas
+
+    @classmethod
+    def creacion_tablas_combinacion(cls, datos, combinaciones):
+        creacion_tablas = cls.__new__(cls)
+        creacion_tablas.datos = datos
+        creacion_tablas.x_barra = float(datos.mean(axis=1))
+        creacion_tablas.var_poblacional = float(datos.var(axis=1,
+                                                          ddof=0))  # axis=1 quiere decir la fila 1, ddof=0 (varianza
+        # poblacional), ddof=1 (varianza muestral, esta como predeterminado)
+        creacion_tablas.combinaciones = combinaciones
+        creacion_tablas.tb_mues = DistriMuestre.tabla_muestreo_combinatoria(creacion_tablas)
         creacion_tablas.tb_dis_prob = DistriMuestre.tabla_distri_probabilidad(creacion_tablas)
         creacion_tablas.tb_prob_var = DistriMuestre.tabla_distri_probabilidad_varianza(creacion_tablas)
         return creacion_tablas
@@ -50,15 +67,35 @@ class DistriMuestre:
         return self.tb_prob_var
 
     # Creación de comportamientos
-    def tabla_muestreo(self):
+    def tabla_muestreo_permutacion(self):
+        dates = []
+        temp = product(self.get_datos(), repeat=self.get_combinaciones())
+        for i, j in temp:  # Se agregan o se quitan iteraciones (i,j,k,...) dependiendo de cuantas combinaciones
+            # soliciten
+            datos = f"{i} {j}"
+            valor_datos = (self.get_datos()[i][0], self.get_datos()[j][0])
+            media_muestral = (self.get_datos()[i][0] + self.get_datos()[j][0]) / self.get_combinaciones()
+            varianza_muestral = sum((item - media_muestral) ** 2 for item in valor_datos) / (len(valor_datos) - 1)
+            dates.append(pd.Series([datos,
+                                    valor_datos,
+                                    media_muestral,
+                                    varianza_muestral],
+                                   index=['Datos',
+                                          'Valor_Datos',
+                                          'Media_Muestral',
+                                          'Varianza_Muestral']))
+        df_muestreo = pd.DataFrame(dates, index=range(1, len(dates) + 1))
+        return df_muestreo
+
+    def tabla_muestreo_combinatoria(self):
         dates = []
         temp = combinations(self.get_datos(), self.get_combinaciones())
-        for i, j, k in temp:  # Se agregan o se quitan iteraciones (i,j,k,...) dependiendo de cuantas combinaciones
+        for i, j in temp:  # Se agregan o se quitan iteraciones (i,j,k,...) dependiendo de cuantas combinaciones
             # soliciten
-            datos = f"{i} {j} {k}"
-            valor_datos = (self.get_datos()[i][0], self.get_datos()[j][0], self.get_datos()[k][0])
-            media_muestral = (self.get_datos()[i][0] + self.get_datos()[j][0] + self.get_datos()[k][0]) / self.get_combinaciones()
-            varianza_muestral = sum((item - media_muestral) ** 2 for item in valor_datos)/(len(valor_datos)-1)
+            datos = f"{i} {j}"
+            valor_datos = (self.get_datos()[i][0], self.get_datos()[j][0])
+            media_muestral = (self.get_datos()[i][0] + self.get_datos()[j][0]) / self.get_combinaciones()
+            varianza_muestral = sum((item - media_muestral) ** 2 for item in valor_datos) / (len(valor_datos) - 1)
             dates.append(pd.Series([datos,
                                     valor_datos,
                                     media_muestral,
@@ -76,8 +113,8 @@ class DistriMuestre:
         for item in lista:
             media = item
             frecuencia = int(list(self.get_tabla_muestreo().Media_Muestral).count(item))
-            fr = round(frecuencia / len(self.get_tabla_muestreo()), 4) # Cuatro decimales de precisión
-            percent =  str(round(fr * 100, 2)) + " %" # Conversión a porcentaje
+            fr = round(frecuencia / len(self.get_tabla_muestreo()), 4)  # Cuatro decimales de precisión
+            percent = str(round(fr * 100, 2)) + " %"  # Conversión a porcentaje
             dates.append(pd.Series([media,
                                     frecuencia,
                                     fr,
@@ -86,7 +123,7 @@ class DistriMuestre:
                                           'Frecuencia',
                                           'F.R',
                                           'Porcentaje']))
-        df_dis_prob = pd.DataFrame(dates, index=range(1, len(lista)+1))
+        df_dis_prob = pd.DataFrame(dates, index=range(1, len(lista) + 1))
         return df_dis_prob
 
     def tabla_distri_probabilidad_varianza(self):
@@ -106,17 +143,5 @@ class DistriMuestre:
                                           'Frecuencia',
                                           'F.R',
                                           'Porcentaje']))
-        df_dis_prob_var = pd.DataFrame(dates, index=range(1, len(lista)+1))
+        df_dis_prob_var = pd.DataFrame(dates, index=range(1, len(lista) + 1))
         return df_dis_prob_var
-
-print("Ejercicio Distribución de Muestreo 1")
-data = pd.DataFrame({'E1': [6],
-                     'E2': [4],
-                     'E3': [3],
-                     'E4': [6],
-                     'E5': [2]})
-print(data)
-r = DistriMuestre.creacion_tablas(data, 3)
-print("Inciso a:\n\tMedia Poblacional=", r.get_x_barra(), "\n\tVarianza Poblacional=", r.get_var_poblacional())
-print("Inciso b:\n", r.get_tabla_muestreo())
-print("Inciso c:\n\tDistribución Muestreo media", r.get_dis_tabla_prob(), "\n\tVarianza", r.get_prob_var())
