@@ -1,8 +1,6 @@
 from itertools import combinations, product
 
 import pandas as pd
-from numpy import var
-from Formulas_Estadistica.Comparacion import *
 
 
 class DistriMuestre:
@@ -90,11 +88,11 @@ class DistriMuestre:
     def tabla_muestreo_combinatoria(self):
         dates = []
         temp = combinations(self.get_datos(), self.get_combinaciones())
-        for i, j in temp:  # Se agregan o se quitan iteraciones (i,j,k,...) dependiendo de cuantas combinaciones
+        for i, j, k in temp:  # Se agregan o se quitan iteraciones (i,j,k,...) dependiendo de cuantas combinaciones
             # soliciten
-            datos = f"{i} {j}"
-            valor_datos = (self.get_datos()[i][0], self.get_datos()[j][0])
-            media_muestral = (self.get_datos()[i][0] + self.get_datos()[j][0]) / self.get_combinaciones()
+            datos = f"{i} {j} {k}"
+            valor_datos = (self.get_datos()[i][0], self.get_datos()[j][0], self.get_datos()[k][0])
+            media_muestral = (self.get_datos()[i][0] + self.get_datos()[j][0] + self.get_datos()[k][0]) / self.get_combinaciones()
             varianza_muestral = sum((item - media_muestral) ** 2 for item in valor_datos) / (len(valor_datos) - 1)
             dates.append(pd.Series([datos,
                                     valor_datos,

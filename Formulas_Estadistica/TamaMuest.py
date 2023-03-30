@@ -50,5 +50,5 @@ class TamaMuest:
         alpha = 1 - (self.get_nivel_confianza() / 100)
         alpha_medios = alpha / 2
         z = norm.ppf(alpha_medios)
-        n = (4*z**2*((self.get_p_gorro()/100)*(1-(self.get_p_gorro()/100))))/(self.get_w())**2
+        n = (4*z**2*((self.get_p_gorro()/100)*(1-(self.get_p_gorro()/100))))/(self.get_w()/100)**2
         print("El tamaño de la muestra debe ser aproximadamente", n)

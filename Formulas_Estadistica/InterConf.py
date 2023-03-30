@@ -137,12 +137,15 @@ class InterConf:
         print("El rango es:", w)
 
     def calcular_intervalo_proporcion(self):
-        alpha = 1 - (self.get_nivel_confianza() / 100)
-        alpha_medios = alpha / 2
-        z = norm.ppf(alpha_medios)
         p_gorro_decimal = self.get_p_gorro()/100
-        lim_inferior = (p_gorro_decimal + (z**2/2*self.get_n()) + (z * sqrt((p_gorro_decimal*(1-p_gorro_decimal)/self.get_n())+(z**2/4*self.get_n()**2))))/(1+(z**2/self.get_n()))
-        lim_superior = (p_gorro_decimal + (z**2/2*self.get_n()) - (z * sqrt((p_gorro_decimal*(1-p_gorro_decimal)/self.get_n())+(z**2/4*self.get_n()**2))))/(1+(z**2/self.get_n()))
+        nivel_confianza = self.get_nivel_confianza()/100
+        n = self.get_n()
+        alpha = 1 - nivel_confianza
+        alpha_medios = alpha / 2
+        z = abs(norm.ppf(alpha_medios))
+        margen_error = z * sqrt(p_gorro_decimal * (1-p_gorro_decimal)/n)
+        lim_inferior = p_gorro_decimal - margen_error
+        lim_superior = p_gorro_decimal + margen_error
         intervalo_confianza = [lim_inferior, lim_superior]
         w = lim_superior - lim_inferior
         print("El intervalo de confianza tiene el estimado de:", intervalo_confianza)
@@ -161,3 +164,5 @@ class InterConf:
         w = lim_superior - lim_inferior
         print("El intervalo de confianza tiene el estimado de:", intervalos_confianza)
         print("El rango es:", w)
+
+InterConf.intervalo_confianza_proporcion(100, 85, 97.5).calcular_intervalo_proporcion()
