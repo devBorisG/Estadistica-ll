@@ -22,7 +22,7 @@ vx = ex2 - (miu ** 2)
 sigma = pow(vx, 1 / 2)
 
 z = teorema.teorema_limite_central(xbarra, miu, sigma, n)
-fiz = teorema.probabilidad_z_mayores(z)  # Para hallar z se usa cdf, para hallar P se usa ppf
+fiz = teorema.probabilidad_z(z)  # Para hallar z se usa cdf, para hallar P se usa ppf
 
 print("La probabilidad que la carga sea menor a 0.5 toneladas es:" + str(1-fiz)) # Como me estan preguntando por mayor le tengo que restar 1
 
@@ -34,7 +34,7 @@ s2 = 7
 sigma2 = 7.5
 
 chi2_cal = teorema.teorema_varianza(n, s2, sigma2)
-fichi = teorema.probabilidad_chi2_menores(chi2_cal, n)
+fichi = teorema.probabilidad_chi2(chi2_cal, n)
 
 print("La probabilidad que la varianza sea menor a 7 es:", fichi)
 

@@ -92,8 +92,8 @@ class DistriMuestre:
             # soliciten
             datos = f"{i} {j} {k}"
             valor_datos = (self.get_datos()[i][0], self.get_datos()[j][0], self.get_datos()[k][0])
-            media_muestral = (self.get_datos()[i][0] + self.get_datos()[j][0] + self.get_datos()[k][0]) / self.get_combinaciones()
-            varianza_muestral = sum((item - media_muestral) ** 2 for item in valor_datos) / (len(valor_datos) - 1)
+            media_muestral = round((self.get_datos()[i][0] + self.get_datos()[j][0] + self.get_datos()[k][0]) / self.get_combinaciones(), 1)
+            varianza_muestral = round(sum((item - media_muestral) ** 2 for item in valor_datos) / (len(valor_datos) - 1), 1)
             dates.append(pd.Series([datos,
                                     valor_datos,
                                     media_muestral,

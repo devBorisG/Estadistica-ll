@@ -164,5 +164,3 @@ class InterConf:
         w = lim_superior - lim_inferior
         print("El intervalo de confianza tiene el estimado de:", intervalos_confianza)
         print("El rango es:", w)
-
-InterConf.intervalo_confianza_proporcion(100, 85, 97.5).calcular_intervalo_proporcion()

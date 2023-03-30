@@ -12,12 +12,8 @@ def desviacion_estandar_tipica_media(sigma, n):
     return sigma / sqrt(n)
 
 
-def probabilidad_z_menores(z):
+def probabilidad_z(z):
     return norm.cdf(float(z), 0, 1)
-
-
-def probabilidad_z_mayores(z):
-    return 1 - norm.cdf(float(z), 0, 1)
 
 
 # CHI CUADRADO
@@ -25,12 +21,8 @@ def teorema_varianza(n, s2, sigma2):
     return ((n - 1) * s2) / sigma2
 
 
-def probabilidad_chi2_menores(chi_2, n):
-    return chi2.pdf(chi_2, n - 1)
-
-
-def probabilidad_chi2_mayores(chi_2, n):
-    return 1 - chi2.pdf(chi_2, n - 1)
+def probabilidad_chi2(chi_2, n):
+    return chi2.pdf(float(chi_2), n - 1)
 
 
 def desviacion_estandar_tipica_varianza_muestral(sigma, n):
