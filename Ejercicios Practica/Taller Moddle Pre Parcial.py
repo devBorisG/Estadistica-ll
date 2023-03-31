@@ -2,6 +2,8 @@ from math import sqrt
 
 import sympy as sp
 import pandas as pd
+from scipy.stats import norm
+
 import Formulas_Estadistica.DistribucionMuestreo as dm
 import Formulas_Estadistica.Comparacion as cp
 import Formulas_Estadistica.Teoremas as teo
@@ -114,7 +116,8 @@ p3c = respuesta3.get_des_estand_poblacional()
 p3d = 1-teo.probabilidad_z(teo.teorema_limite_central(0.5, p3a, p3c, 50))
 
 #%% Sección pregunta 4
-"""Pregunta 4 En una fabrica de encuadernación el 89.98 % de los libros pasan la prueba de calidad. Si se selecciona 
+"""Pregunta 4 
+En una fabrica de encuadernación el 89.98 % de los libros pasan la prueba de calidad. Si se selecciona 
 una muestra de 40 libros. Responda:
 A.     ¿Cuál es la probabilidad de que menos del 20% de los libros no pasen la prueba?
 B.     ¿Cuál es la probabilidad de que la proporción muestral sea superior a la proporción poblacional?
@@ -128,11 +131,14 @@ p4a = teo.probabilidad_z(teo.teorema_proporcion(80, 89.98, 40))
 
 "Respuesta Pregunta 4 Inciso B"
 
+
+
 "Respuesta Pregunta 4 Inciso C"
 
 p4c = teo.probabilidad_z(teo.teorema_proporcion(95, 89.98, 40))
 
 "Respuesta Pregunta 4 Inciso D"
+
 
 
 #%% Sección pregunta 5
@@ -149,7 +155,21 @@ p5a = teo.probabilidad_z(-1.50)
 
 p5b = 1-teo.probabilidad_z(-2.56)
 
+"Respuesta Pregunta 5 Inciso C"
+
+p5e = norm.ppf(0.35)
+
+"Respuesta Pregunta 5 Inciso D"
+
+p5d = norm.ppf(0.65)*-1
+
 "Respuesta Pregunta 5 Inciso E"
+
+p5e = teo.probabilidad_z(1.36) - teo.probabilidad_z(-1.02)
+
+"Respuesta Pregunta 5 Inciso F"
+
+
 
 #%% Sección pregunta 6
 """Pregunta 6
