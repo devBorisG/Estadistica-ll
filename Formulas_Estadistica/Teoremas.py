@@ -22,7 +22,7 @@ def teorema_varianza(n, s2, sigma2):
 
 
 def probabilidad_chi2(chi_2, n):
-    return chi2.pdf(float(chi_2), n - 1)
+    return chi2.cdf(float(chi_2), n - 1)
 
 
 def desviacion_estandar_tipica_varianza_muestral(sigma, n):
