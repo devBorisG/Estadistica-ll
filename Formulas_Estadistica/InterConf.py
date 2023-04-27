@@ -153,13 +153,14 @@ class InterConf:
 
     def calcular_intervalo_varianza(self):
         alpha = 1 - (self.get_nivel_confianza() / 100)
-        uno_menos_alpha_medios = alpha/2
-        alpha_medios = (self.get_nivel_confianza()/100) + uno_menos_alpha_medios
+        alpha_medios = alpha/2
+        uno_menos_alpha_medios = (self.get_nivel_confianza()/100) + alpha_medios
         s_cuadrado = self.get_des_estand_muestral()**2
         chi_cuadrado_inf = chi2.ppf(alpha_medios, self.get_n()-1)
         chi_cuadrado_sup = chi2.ppf(uno_menos_alpha_medios, self.get_n()-1)
-        lim_inferior = ((self.get_n()-1)*s_cuadrado)/chi_cuadrado_inf
-        lim_superior = ((self.get_n()-1)*s_cuadrado)/chi_cuadrado_sup
+        print(chi_cuadrado_inf, chi_cuadrado_sup)
+        lim_inferior = sqrt(((self.get_n()-1)*s_cuadrado)/chi_cuadrado_sup)
+        lim_superior = sqrt(((self.get_n()-1)*s_cuadrado)/chi_cuadrado_inf)
         intervalos_confianza = [lim_inferior, lim_superior]
         w = lim_superior - lim_inferior
         print("El intervalo de confianza tiene el estimado de:", intervalos_confianza)
