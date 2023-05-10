@@ -1,8 +1,4 @@
-import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib import colormaps
-from matplotlib import colors
 
 # %%Ejercicio 1: Defectos en vehículos
 frecuencia = [30, 21, 6, 6, 5, 5, 4, 4]
