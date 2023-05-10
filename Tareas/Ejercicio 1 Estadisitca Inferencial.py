@@ -1,5 +1,6 @@
-import pandas as pd
 from itertools import combinations
+
+import pandas as pd
 
 
 # %%Tabla de muestreo
