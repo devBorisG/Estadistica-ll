@@ -50,7 +50,7 @@ class Average(object):
         :doc-author: David
         """
 
-        def __hypothesis_with_z(self) -> bool:
+        def __hypothesis_with_z_two_samples(self) -> bool:
             """
             The hypothesis_with_z function is used to determine if the null hypothesis should be rejected or not.
             It uses the z-score and compares it with a critical value, which is calculated using the alpha level and
@@ -61,7 +61,9 @@ class Average(object):
             :doc-author: David
             """
             z = (self.x_barra - self.miu) / (
-                math.sqrt(((self.sigma1 ** 2) / self.population) + ((self.sigma2 ** 2) / self.sample)))
+                math.sqrt(((self.sigma1 ** 2) / self.population) + ((self.sigma2 ** 2) / self.sample))) # FORMULA USADA
+            # PARA DOS POBLACIONES
+            # TODO: Realizar la lógica para UNA POBLACIÓN
             z_alpha = norm.ppf(1 - self.alpha)
             if option is 1:
                 if z > z_alpha:
@@ -85,7 +87,7 @@ class Average(object):
         case_l.sigma2 = sigma2
         case_l.miu = miu
         case_l.alpha = alpha
-        case_l.respuesta = "Se rechaza Ho" if __hypothesis_with_z(case_l) else "No se rechaza Ho"
+        case_l.respuesta = "Se rechaza Ho" if __hypothesis_with_z_two_samples(case_l) else "No se rechaza Ho"
         return case_l
 
     @classmethod
