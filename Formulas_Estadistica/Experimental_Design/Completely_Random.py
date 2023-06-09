@@ -194,6 +194,15 @@ class Unifactorial:
         return value
 
     def prueba_homocedasticidad_bartlett(self):
+        """
+    The prueba_homocedasticidad_bartlett function is used to test the homoscedasticity of the data.
+        The function uses a Bartlett's test for equal variances, and if p &lt; 0.05 then we reject homoscedasticity
+        and therefore our ANOVA is invalid.
+
+    :param self: Represent the instance of the class
+    :return: The chi-squared value and the p-value
+    :doc-author: David
+    """
         data_tras = self.dataframe.transpose()  # 1. Se transpone la matriz, dado que la libreria pide los datos en
         # forma de columna, es decir cada tratamiento va a ser una columna y no una fila
         data_tras = data_tras.drop(["medias", "Total"])  # 2. Se quita las filas de medias y totales, solo se requieren
