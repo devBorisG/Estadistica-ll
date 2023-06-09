@@ -7,4 +7,4 @@ df = pd.read_excel(r'C:\Users\david\Documents\datosunifactorial.xlsx', sheet_nam
 var = Completely_Random.Unifactorial(df).metodo_lsd_dca()
 print(var)
 
-Completely_Random.Unifactorial(df).comprobacion_hipotesis(0.05)
+Completely_Random.Unifactorial(df).metodo_normalidad_shapiro()

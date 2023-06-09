@@ -1,7 +1,8 @@
 import numpy as np
 from itertools import combinations
-from scipy.stats import t,f
+from scipy.stats import t, f, shapiro
 import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
 
 import pandas as pd
 
@@ -30,7 +31,7 @@ class Unifactorial:
         self.N = self.k * self.n  # encontramos el número total de observaciones
         self.dataframe["medias"] = self.dataframe.mean(axis=1)  # encontramos las medias de cada tratamiento y la
         # añadimos a la matriz de datos
-        self.dataframe["Total"] = self.__suma_totales()  # Calculamos y añadimos la columna de totales a nuestra matriz
+        self.dataframe["Total"] = self.dataframe[1]+self.dataframe[2]+self.dataframe[3]+self.dataframe[4]  # Calculamos y añadimos la columna de totales a nuestra matriz
         # de datos
         self.totales = self.dataframe["Total"].tolist()  # Convertimos la columna de totales en una lista
         self.y_total = sum(self.dataframe["Total"])  # Calculamos "y.." sumando los elementos de la columna de totales
@@ -45,20 +46,6 @@ class Unifactorial:
         self.cm_tra = self.ss_tra / self.gl_tra  # Varianza para los tratamientos
         self.cmt = self.sst / self.gl_t  # Varianza total
         self.cme = self.sse / self.gl_e  # Varianza para el error
-
-    def __suma_totales(self):
-        """
-    The __suma_totales function is a private function that sums the values of all the columns in a dataframe.
-    It takes no arguments and returns an integer value.
-
-    :param self: Allow an object to refer to itself inside a class
-    :return: The sum of the values in each row
-    :doc-author: David
-    """
-        total = 0
-        for i in range(1, self.n + 1):
-            total += self.dataframe[i]
-        return total
 
     def __suma_cuadrados(self):
         """
@@ -134,3 +121,46 @@ class Unifactorial:
         plt.ylabel("Tiempo de ensamble [min]")
         plt.show()
         return tabla_lsd
+
+    def metodo_normalidad_shapiro(self):
+        data_normal = pd.DataFrame()
+        data_normal["Data"] = self.__data_normal_to_list()  # 1. Necesitamos una lista con todos los datos de matriz
+        # del DDE
+        shapiro_value = shapiro(data_normal["Data"])  # 2. Se realiza la prueba de shapiro Wilks con la función
+        # Shapiro de scipy
+        print("El valor de W calculado es:", shapiro_value[0])  # Se imprime el valor de W calculado y el valor P
+        print("El valor P para el W calculado de la prueba de shapiro es:", shapiro_value[1])
+        if shapiro_value[1] < 0.05:
+            print("Se rechaza normalidad de los residuos")
+        else:
+            print("No se rechaza normalidad de los residuos, el ANOVA es valido en cuestión de normalidad")
+
+        # Prueba gráfica de normalidad
+        # 1. Se necesitan los datos en una sola columna
+        # 2. Se organiza los datos en orden ascendente
+        data_normal = data_normal.sort_values("Data")
+        # 3. Se le asigna a cada dato un posicion
+        i = list(range(1, len(data_normal)+1)) # Se crea una lista con las posiciones
+        data_normal["i"] = i  # Se anexan las posiciones al DataFrame
+        # 4. Se calcula el papel de probabilidad normal
+
+        def normal_operation(x):
+            return (x-0.05)/self.N
+
+        data_normal["(i-0.5)/N"] = data_normal["i"].apply(lambda x: normal_operation(x))
+        plt.plot(data_normal["Data"], data_normal["(i-0.5)/N"], "bo")
+        plt.xlabel("ri")
+        plt.ylabel("(i-0.05)/N")
+        plt.show()
+
+        # Sacar R2 de la prueba de normalidad gráfica
+        x = np.array(data_normal["Data"]).reshape(-1, 1)
+        y = np.array(data_normal["(i-0.5)/N"]).reshape(-1, 1)
+        regression = LinearRegression().fit(x, y)
+        print("El R2 de la regresión es:", regression.score(x, y))
+
+    def __data_normal_to_list(self):
+        value = []
+        for i in range(1, self.k+1):
+            value += self.dataframe[i].tolist()
+        return value
