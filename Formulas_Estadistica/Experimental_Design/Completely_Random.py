@@ -1,6 +1,6 @@
 import numpy as np
 from itertools import combinations
-from scipy.stats import t, f, shapiro
+from scipy.stats import t, f, shapiro, bartlett
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 
@@ -11,8 +11,8 @@ class Unifactorial:
     def __init__(self, dataframe: pd.DataFrame):  # Se ingresa el excel
         """
     The __init__ function is the constructor of the class. It initializes all the attributes that are needed for
-    the rest of the functions to work properly. The dataframe attribute is initialized with whatever dataframe was passed
-    to it when creating an instance of this class.
+    the rest of the functions to work properly. The dataframe attribute is initialized with whatever dataframe was
+    passed to it when creating an instance of this class.
 
     :param self: Represent the instance of the class
     :param dataframe: Store the dataframe that will be used in the class
@@ -31,10 +31,11 @@ class Unifactorial:
         self.N = self.k * self.n  # encontramos el número total de observaciones
         self.dataframe["medias"] = self.dataframe.mean(axis=1)  # encontramos las medias de cada tratamiento y la
         # añadimos a la matriz de datos
-        self.dataframe["Total"] = self.dataframe[1]+self.dataframe[2]+self.dataframe[3]+self.dataframe[4]  # Calculamos y añadimos la columna de totales a nuestra matriz
+        # Calculamos y añadimos la columna de totales a nuestra matriz
+        self.dataframe["Total"] = self.dataframe[1]+self.dataframe[2]+self.dataframe[3]+self.dataframe[4]
         # de datos
         self.totales = self.dataframe["Total"].tolist()  # Convertimos la columna de totales en una lista
-        self.y_total = sum(self.dataframe["Total"])  # Calculamos "y.." sumando los elementos de la columna de totales
+        self.y_total = sum(self.dataframe["Total"])  # Calculamos "y. ." Sumando los elementos de la columna de totales
         self.suma_cuadrados_yi = self.__suma_cuadrados()  # Aquí calculamos la suma cuadrados de los "yi.^2"
         self.ss_tra = (1/self.n)*self.suma_cuadrados_yi-((self.y_total**2)/self.N)  # Se calcula la suma de cuadrados
         # para los tratamientos
@@ -84,11 +85,11 @@ class Unifactorial:
 
     def metodo_lsd_dca(self):
         """
-    The metodo_lsd_dca function takes the dataframe and calculates the LSD method for DCA.
+    The metodo_lsd_dca function takes the dataframe and calculates the L.S.D method for DCA.
         It returns a table with the pairs of means, their difference and if they are significant or not.
 
     :param self: Represent the instance of the class
-    :return: A table with the results of the lsd method
+    :return: A table with the results of the l.s.d method
     :doc-author: David
     """
         medias = self.dataframe["medias"].tolist()  # Volvemos la columna de medias de la tabla de datos una lista
@@ -123,6 +124,15 @@ class Unifactorial:
         return tabla_lsd
 
     def metodo_normalidad_shapiro(self):
+        """
+    The metodo_normalidad_shapiro function is used to test the normality of the residuals.
+        It uses a Shapiro Wilks test and a graphical method to determine if the residuals are normally distributed.
+        The function prints out whether we can reject normality, as well as an R2 value for the graphical method.
+
+    :param self: Represent the instance of the class
+    :return: The following values:
+    :doc-author: David
+    """
         data_normal = pd.DataFrame()
         data_normal["Data"] = self.__data_normal_to_list()  # 1. Necesitamos una lista con todos los datos de matriz
         # del DDE
@@ -139,15 +149,23 @@ class Unifactorial:
         # 1. Se necesitan los datos en una sola columna
         # 2. Se organiza los datos en orden ascendente
         data_normal = data_normal.sort_values("Data")
-        # 3. Se le asigna a cada dato un posicion
-        i = list(range(1, len(data_normal)+1)) # Se crea una lista con las posiciones
+        # 3. Se le asigna a cada dato un posición
+        i = list(range(1, len(data_normal)+1))  # Se crea una lista con las posiciones
         data_normal["i"] = i  # Se anexan las posiciones al DataFrame
         # 4. Se calcula el papel de probabilidad normal
 
-        def normal_operation(x):
-            return (x-0.05)/self.N
+        def normal_operation(value):
+            """
+        The normal_operation function takes a value and returns the normalized value.
+            The normalization is done by subtracting 0.05 from the inputted value, then dividing that result by N.
 
-        data_normal["(i-0.5)/N"] = data_normal["i"].apply(lambda x: normal_operation(x))
+        :param value: Calculate the normal operation of the system
+        :return: The value of the normal operation
+        :doc-author: David
+        """
+            return (value - 0.05)/self.N
+
+        data_normal["(i-0.5)/N"] = data_normal["i"].apply(lambda item: normal_operation(item))
         plt.plot(data_normal["Data"], data_normal["(i-0.5)/N"], "bo")
         plt.xlabel("ri")
         plt.ylabel("(i-0.05)/N")
@@ -160,7 +178,40 @@ class Unifactorial:
         print("El R2 de la regresión es:", regression.score(x, y))
 
     def __data_normal_to_list(self):
+        """
+    The __data_normal_to_list function takes the dataframe and converts it into a list.
+        This is done by taking each column of the dataframe, converting it to a list, and then appending that
+        list to an empty value variable.
+        The function returns this value variable.
+
+    :param self: Represents the instance class
+    :return: A list of all the values in the dataframe
+    :doc-author: David
+    """
         value = []
         for i in range(1, self.k+1):
             value += self.dataframe[i].tolist()
         return value
+
+    def prueba_homocedasticidad_bartlett(self):
+        data_tras = self.dataframe.transpose()  # 1. Se transpone la matriz, dado que la libreria pide los datos en
+        # forma de columna, es decir cada tratamiento va a ser una columna y no una fila
+        data_tras = data_tras.drop(["medias", "Total"])  # 2. Se quita las filas de medias y totales, solo se requieren
+        # los datos
+        barlett_test = bartlett(data_tras[0], data_tras[1], data_tras[2], data_tras[3])  # Se meten los datos en la
+        # función de barlett para la prueba de homocedasticidad
+        print("EL valor de chi cuadrado calculado es:", barlett_test[0])
+        print("El valor de P para prueba de Barlett es:", barlett_test[1])
+        if barlett_test[1] < 0.05:
+            print("Se rechaza Homocedasticidad, por lo tanto el ANOVA no es valido")
+        else:
+            print("No se rechaza Homocedasticidad, el ANOVA es valido")
+
+        # Prueba gráfica de homocedasticidad "Varianza constante"
+        residuos = []
+        for i in range(self.n):
+            predicho = self.dataframe["medias"][i]
+            residuo = data_tras[i]-predicho
+            residuos.append(residuo)
+            plt.plot([predicho, predicho, predicho, predicho], residuo, "bo")
+        plt.show()
